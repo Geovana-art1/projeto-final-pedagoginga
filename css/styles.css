@@ -42,12 +42,12 @@ body {
     background-color: #d3cef7;
 }
 
-.cell.X{
+.cell.x{
     background-color: #007bff;
     color: white;
 }
 
-.cell.O{
+.cell.o{
     background-color: #dc3545;
     color: white;
 }

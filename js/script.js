@@ -5,7 +5,7 @@ const cells = document.querySelectorAll(".cell");
 const statusText = document.getElementById("status");
 
 // Seleciona o botão de reiniciar
-const statustBtn = document.getElementById("restart");
+const restartBtn = document.getElementById("restart");
 
 // Define quem é o jogador
 let currentPlayer = "X";
@@ -29,14 +29,14 @@ const winningConditions = [
 
 function initializeGame() {
     for(let i= 0; i < 9; i++){
-        cells[i].addEventListener("click", handLeCellClick)
+        cells[i].addEventListener("click", handleCellClick)
     }
     restartBtn.addEventListener("click", restartGame)
     statusText.textContent = `Vez do jogador ${currentPlayer}`;
 }
 
 function handleCellClick(event) {
-    const cell = EventTarget.target // célula clicada
+    const cell = event.target // célula clicada
     const index = cell.getAttribute("data-index"); // índiceda célula (0 a 8)
 
     // Se já tiver valor ou jogo acabou, ignora clique
@@ -49,9 +49,58 @@ function handleCellClick(event) {
 
     if(currentPlayer === "X"){
         cell.classList.add("x")
-    }else {
+    } else {
         cell.classList.add("o")
     }
 
-    checkWinner()
+    checkWinner();
 }
+
+function checkWinner(){
+    let roudWon = false;
+
+    for (let i = 0; i < winningConditions.length; i+=1) {
+        const [a, b, c] = winningConditions[i]
+        if (board [a] && board [a] === board [b] && board [a] === board [c]){
+            roudWon = true;
+            break;
+        }
+    }
+
+    // Se alguém venceu
+    if (roudWon) {
+        statusText.textContent = `Jogador ${currentPlayer} venceu!`;
+        gameActive = false;
+        return;
+    }
+    
+    // Se todas as células estiverem preenchidas e niguém ganhou, empata
+    if (!board.includes("")){
+        statusText.textContent = "Empate!";
+        gameActive = false;
+        return;
+    }
+    
+    // Inverte jogador
+    if (currentPlayer === "X") {
+        currentPlayer ="O";
+    } else {
+        currentPlayer = "X";
+    }
+    statusText.textContent = `Vez do jogador ${currentPlayer}`;
+}
+
+function restartGame(){
+    currentPlayer = "X"
+    board = ["", "", "", "", "", "", "", "", ""];
+    gameActive = true; 
+    statusText.textContent = `Vez do jogador ${currentPlayer}`;
+    
+    for  (let i = 0; i < cells.length; i+=1) {
+        cells[i].textContent = "";
+        cells[i].classList.remove("x");
+        cells[i].classList.remove("o");
+    }
+}
+
+initializeGame();
